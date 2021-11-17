@@ -45,7 +45,7 @@ class _GenrePageState extends State<GenrePage> {
 
     try {
       http.Response res = await http.get(Uri.parse('$url/genre?q=$q'));
-      Map<String, dynamic> resJson = jsonDecode(res.body);
+      Map<String, dynamic> resJson = jsonDecode(utf8.decode(res.bodyBytes));
 
       return resJson;
     } catch (e) {
@@ -129,9 +129,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<List<dynamic>> _searchArtist(String q) async {
     String url = dotenv.get("HOST");
     try {
-      http.Response res =
-          await http.get(Uri.parse('$url/artist_genre?artist=$q'));
-      Map<String, dynamic> resJson = jsonDecode(res.body);
+      http.Response res = await http.get(Uri.parse('$url/artist?q=$q'));
+      Map<String, dynamic> resJson = jsonDecode(utf8.decode(res.bodyBytes));
       return resJson['genres'];
     } catch (e) {
       return [e.toString()];
