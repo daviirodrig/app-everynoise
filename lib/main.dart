@@ -53,6 +53,13 @@ class _GenrePageState extends State<GenrePage> {
     }
   }
 
+  void _playSong(index) async {
+    await player.setUrl(genreArtists["artists"][index]["preview_url"]);
+    await player.setLoopMode(LoopMode.one);
+    player.play();
+    setState(() {});
+  }
+
   void _loadArtistsList() {
     var res = _networkGenrePage(widget.genre);
     res.then((value) {
@@ -88,20 +95,20 @@ class _GenrePageState extends State<GenrePage> {
                       title: Text(genreArtists["artists"][index]["name"]),
                       trailing: GestureDetector(
                         child: const Icon(Icons.audiotrack_rounded),
-                        onTap: () async {
-                          if (!player.playing) {
-                            await player.setUrl(
-                                genreArtists["artists"][index]["preview_url"]);
-                            await player.setLoopMode(LoopMode.one);
-                            player.play();
-                          } else {
-                            player.stop();
-                          }
-                        },
+                        onTap: () => _playSong(index),
                       ),
                     );
                   })
               : const CircularProgressIndicator()),
+      floatingActionButton: player.playing
+          ? FloatingActionButton(
+              onPressed: () {
+                player.stop();
+                setState(() {});
+              },
+              child: const Icon(Icons.stop),
+            )
+          : Container(),
     );
   }
 }
