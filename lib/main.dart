@@ -19,8 +19,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Everynoise',
       theme: ThemeData(
-          primarySwatch: Colors.green,
-          textTheme: GoogleFonts.robotoCondensedTextTheme()),
+        primarySwatch: Colors.green,
+        textTheme: GoogleFonts.robotoCondensedTextTheme(),
+      ),
       home: const MyHomePage(title: 'EveryNoise'),
     );
   }
@@ -44,7 +45,9 @@ class _GenrePageState extends State<GenrePage> {
     String url = dotenv.get("HOST");
 
     try {
-      http.Response res = await http.get(Uri.parse('$url/genre?q=$q'));
+      http.Response res = await http.get(
+        Uri.parse('$url/genre?q=$q'),
+      );
       Map<String, dynamic> resJson = jsonDecode(utf8.decode(res.bodyBytes));
 
       return resJson;
@@ -85,21 +88,25 @@ class _GenrePageState extends State<GenrePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Genre Page")),
+      appBar: AppBar(
+        title: const Text("Genre Page"),
+      ),
       body: Center(
-          child: genreArtists.isNotEmpty
-              ? ListView.builder(
-                  itemCount: genreArtists["artists"].length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(genreArtists["artists"][index]["name"]),
-                      trailing: GestureDetector(
-                        child: const Icon(Icons.audiotrack_rounded),
-                        onTap: () => _playSong(index),
-                      ),
-                    );
-                  })
-              : const CircularProgressIndicator()),
+        child: genreArtists.isNotEmpty
+            ? ListView.builder(
+                itemCount: genreArtists["artists"].length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(genreArtists["artists"][index]["name"]),
+                    trailing: GestureDetector(
+                      child: const Icon(Icons.audiotrack_rounded),
+                      onTap: () => _playSong(index),
+                    ),
+                  );
+                },
+              )
+            : const CircularProgressIndicator(),
+      ),
       floatingActionButton: player.playing
           ? FloatingActionButton(
               onPressed: () {
@@ -129,7 +136,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<List<dynamic>> _searchArtist(String q) async {
     String url = dotenv.get("HOST");
     try {
-      http.Response res = await http.get(Uri.parse('$url/artist?q=$q'));
+      http.Response res = await http.get(
+        Uri.parse('$url/artist?q=$q'),
+      );
       Map<String, dynamic> resJson = jsonDecode(utf8.decode(res.bodyBytes));
       return resJson['genres'];
     } catch (e) {
@@ -151,10 +160,19 @@ class _MyHomePageState extends State<MyHomePage> {
           textStr = "$i";
         }
         searched.add(GestureDetector(
-          child: Text(textStr, style: const TextStyle(fontSize: 20)),
+          child: Text(
+            textStr,
+            style: const TextStyle(fontSize: 20),
+          ),
           onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => GenrePage(genre: i)));
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => GenrePage(
+                  genre: i,
+                ),
+              ),
+            );
           },
         ));
       }
@@ -179,26 +197,28 @@ class _MyHomePageState extends State<MyHomePage> {
               onSubmitted: _submit,
               controller: _textcontrol,
               decoration: InputDecoration(
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.send),
-                    onPressed: () {
-                      _submit(_textcontrol.text);
-                    },
-                  ),
-                  border: const OutlineInputBorder()),
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.send),
+                  onPressed: () {
+                    _submit(_textcontrol.text);
+                  },
+                ),
+                border: const OutlineInputBorder(),
+              ),
             ),
           ),
           Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: loading
-                  ? const CircularProgressIndicator(
-                      backgroundColor: Colors.deepPurple,
-                      color: Colors.teal,
-                      strokeWidth: 5,
-                    )
-                  : Wrap(
-                      children: searched,
-                    ))
+            padding: const EdgeInsets.all(8.0),
+            child: loading
+                ? const CircularProgressIndicator(
+                    backgroundColor: Colors.deepPurple,
+                    color: Colors.teal,
+                    strokeWidth: 5,
+                  )
+                : Wrap(
+                    children: searched,
+                  ),
+          ),
         ],
       ),
     );
