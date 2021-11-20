@@ -67,7 +67,7 @@ class _GenrePageState extends State<GenrePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Genre Page"),
+        title: Text(widget.genre),
       ),
       body: genreArtists.isNotEmpty
           ? ListView.separated(
