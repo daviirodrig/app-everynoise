@@ -69,25 +69,25 @@ class _GenrePageState extends State<GenrePage> {
       appBar: AppBar(
         title: const Text("Genre Page"),
       ),
-      body: Center(
-        child: genreArtists.isNotEmpty
-            ? ListView.separated(
-                itemCount: genreArtists["artists"].length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(genreArtists["artists"][index]["name"]),
-                    trailing: GestureDetector(
-                      child: const Icon(Icons.audiotrack_rounded),
-                      onTap: () => _playSong(index),
-                    ),
-                  );
-                },
-                separatorBuilder: (context, index) {
-                  return const Divider();
-                },
-              )
-            : const CircularProgressIndicator(),
-      ),
+      body: genreArtists.isNotEmpty
+          ? ListView.separated(
+              itemCount: genreArtists["artists"].length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(genreArtists["artists"][index]["name"]),
+                  trailing: GestureDetector(
+                    child: const Icon(Icons.audiotrack_rounded),
+                    onTapDown: (i) => _playSong(index),
+                  ),
+                );
+              },
+              separatorBuilder: (context, index) {
+                return const Divider();
+              },
+            )
+          : const Center(
+              child: CircularProgressIndicator(),
+            ),
       floatingActionButton: player.playing
           ? FloatingActionButton(
               onPressed: () {
