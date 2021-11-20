@@ -71,7 +71,7 @@ class _GenrePageState extends State<GenrePage> {
       ),
       body: Center(
         child: genreArtists.isNotEmpty
-            ? ListView.builder(
+            ? ListView.separated(
                 itemCount: genreArtists["artists"].length,
                 itemBuilder: (context, index) {
                   return ListTile(
@@ -81,6 +81,9 @@ class _GenrePageState extends State<GenrePage> {
                       onTap: () => _playSong(index),
                     ),
                   );
+                },
+                separatorBuilder: (context, index) {
+                  return const Divider();
                 },
               )
             : const CircularProgressIndicator(),
