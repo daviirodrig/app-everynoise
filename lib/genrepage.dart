@@ -75,10 +75,8 @@ class _GenrePageState extends State<GenrePage> {
               itemBuilder: (context, index) {
                 return ListTile(
                   title: Text(genreArtists["artists"][index]["name"]),
-                  trailing: GestureDetector(
-                    child: const Icon(Icons.audiotrack_rounded),
-                    onTapDown: (i) => _playSong(index),
-                  ),
+                  trailing: const Icon(Icons.audiotrack_rounded),
+                  onTap: () => _playSong(index),
                 );
               },
               separatorBuilder: (context, index) {
