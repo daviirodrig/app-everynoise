@@ -13,6 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Everynoise',
       theme: ThemeData(
+        brightness: Brightness.dark,
         primarySwatch: Colors.green,
       ),
       home: const MyHomePage(title: 'EveryNoise'),
