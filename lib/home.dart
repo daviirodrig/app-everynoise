@@ -31,7 +31,18 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void _submit(String val) {
+  void _submitGenre(String val) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => GenrePage(
+          genre: val,
+        ),
+      ),
+    );
+  }
+
+  void _submitArtist(String val) {
     setState(() {
       loading = true;
     });
@@ -67,7 +78,8 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  final TextEditingController _textcontrol = TextEditingController();
+  final TextEditingController _genrecontrol = TextEditingController();
+  final TextEditingController _artistcontrol = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -78,15 +90,17 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(
+                right: 8.0, left: 8.0, bottom: 8.0, top: 16.0),
             child: TextField(
-              onSubmitted: _submit,
-              controller: _textcontrol,
+              onSubmitted: _submitArtist,
+              controller: _artistcontrol,
               decoration: InputDecoration(
+                labelText: "Search Artist",
                 suffixIcon: IconButton(
                   icon: const Icon(Icons.send),
                   onPressed: () {
-                    _submit(_textcontrol.text);
+                    _submitArtist(_artistcontrol.text);
                   },
                 ),
                 border: const OutlineInputBorder(),
@@ -105,6 +119,23 @@ class _MyHomePageState extends State<MyHomePage> {
                     children: searched,
                   ),
           ),
+          Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                onSubmitted: _submitGenre,
+                controller: _genrecontrol,
+                decoration: InputDecoration(
+                  labelText: "Go to genre",
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.arrow_right_alt),
+                    iconSize: 38.0,
+                    onPressed: () {
+                      _submitGenre(_genrecontrol.text);
+                    },
+                  ),
+                  border: const OutlineInputBorder(),
+                ),
+              ))
         ],
       ),
     );
