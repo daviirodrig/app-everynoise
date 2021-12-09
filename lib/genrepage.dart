@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:just_audio/just_audio.dart';
@@ -17,6 +19,7 @@ class GenrePage extends StatefulWidget {
 class _GenrePageState extends State<GenrePage> {
   Map<String, dynamic> genreArtists = {};
   final AudioPlayer player = AudioPlayer();
+  Timer? timer;
 
   Future<Map<String, dynamic>> _networkGenrePage(String q) async {
     await dotenv.load();
@@ -34,11 +37,22 @@ class _GenrePageState extends State<GenrePage> {
     }
   }
 
+  void _scanGenres() {
+    Random random = Random();
+    int listSize = genreArtists["artists"].length;
+    timer = Timer.periodic(const Duration(seconds: 30), (timer) {
+      _playSong(random.nextInt(listSize));
+    });
+  }
+
   void _playSong(index) async {
-    await player.setUrl(genreArtists["artists"][index]["preview_url"]);
-    await player.setLoopMode(LoopMode.one);
-    player.play();
-    setState(() {});
+    String url = genreArtists["artists"][index]["preview_url"];
+    if (url.isNotEmpty) {
+      await player.setUrl(url);
+      await player.setLoopMode(LoopMode.one);
+      player.play();
+      setState(() {});
+    }
   }
 
   void _loadArtistsList() {
@@ -68,6 +82,14 @@ class _GenrePageState extends State<GenrePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.genre),
+        actions: [
+          IconButton(
+            onPressed: _scanGenres,
+            icon: const Icon(
+              Icons.sensors,
+            ),
+          )
+        ],
       ),
       body: genreArtists.isNotEmpty
           ? ListView.separated(
@@ -90,6 +112,7 @@ class _GenrePageState extends State<GenrePage> {
           ? FloatingActionButton(
               onPressed: () {
                 player.stop();
+                timer?.cancel();
                 setState(() {});
               },
               child: const Icon(Icons.stop),
