@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
+//import 'package:app_everynoise/playlists_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:just_audio/just_audio.dart';
@@ -27,7 +28,7 @@ class _GenrePageState extends State<GenrePage> {
 
     try {
       http.Response res = await http.get(
-        Uri.parse('$url/genre?q=$q'),
+        Uri.parse('$url/genre/$q'),
       );
       Map<String, dynamic> resJson = jsonDecode(utf8.decode(res.bodyBytes));
 
@@ -65,6 +66,10 @@ class _GenrePageState extends State<GenrePage> {
     });
   }
 
+  void _goToPlaylists() {
+    return;
+  }
+
   @override
   void dispose() {
     player.dispose();
@@ -88,7 +93,10 @@ class _GenrePageState extends State<GenrePage> {
             icon: const Icon(
               Icons.sensors,
             ),
-          )
+          ),
+          //IconButton(
+          //    onPressed: _goToPlaylists,
+          //    icon: const Icon(Icons.my_library_music_rounded))
         ],
       ),
       body: genreArtists.isNotEmpty

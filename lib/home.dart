@@ -22,7 +22,7 @@ class _MyHomePageState extends State<MyHomePage> {
     String url = dotenv.get("HOST");
     try {
       http.Response res = await http.get(
-        Uri.parse('$url/artist?q=$q'),
+        Uri.parse('$url/search/artist/$q'),
       );
       Map<String, dynamic> resJson = jsonDecode(utf8.decode(res.bodyBytes));
       return resJson['genres'];
