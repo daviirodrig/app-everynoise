@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
-//import 'package:app_everynoise/playlists_page.dart';
+import 'package:app_everynoise/playlists_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:just_audio/just_audio.dart';
@@ -67,7 +67,14 @@ class _GenrePageState extends State<GenrePage> {
   }
 
   void _goToPlaylists() {
-    return;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PlaylistsPage(
+          list: genreArtists["playlists"],
+        ),
+      ),
+    );
   }
 
   @override
@@ -94,9 +101,9 @@ class _GenrePageState extends State<GenrePage> {
               Icons.sensors,
             ),
           ),
-          //IconButton(
-          //    onPressed: _goToPlaylists,
-          //    icon: const Icon(Icons.my_library_music_rounded))
+          IconButton(
+              onPressed: _goToPlaylists,
+              icon: const Icon(Icons.my_library_music_rounded))
         ],
       ),
       body: genreArtists.isNotEmpty
@@ -104,7 +111,21 @@ class _GenrePageState extends State<GenrePage> {
               itemCount: genreArtists["artists"].length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(genreArtists["artists"][index]["name"]),
+                  title: Text(
+                    genreArtists["artists"][index]["name"],
+                    style: TextStyle(
+                      color: Color(int.parse(
+                          genreArtists["artists"][index]["preview_url"].isEmpty
+                              ? "0x55" +
+                                  genreArtists["artists"][index]["style"][0]
+                                      .split(" ")[1]
+                                      .substring(1)
+                              : "0xFF" +
+                                  genreArtists["artists"][index]["style"][0]
+                                      .split(" ")[1]
+                                      .substring(1))),
+                    ),
+                  ),
                   trailing: const Icon(Icons.audiotrack_rounded),
                   onTap: () => _playSong(index),
                 );
