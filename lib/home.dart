@@ -48,29 +48,44 @@ class _MyHomePageState extends State<MyHomePage> {
     });
     _searchArtist(val).then((v) {
       searched = [];
-      for (var i in v) {
-        String textStr;
-        if (i.toString() != v.last.toString()) {
-          textStr = "$i | ";
-        } else {
-          textStr = "$i";
-        }
-        searched.add(GestureDetector(
-          child: Text(
-            textStr,
-            style: const TextStyle(fontSize: 20),
-          ),
-          onTap: () {
+      for (var genre in v) {
+        ElevatedButton genreButton = ElevatedButton(
+          onPressed: () {
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => GenrePage(
-                  genre: i,
+                  genre: genre,
                 ),
               ),
             );
           },
-        ));
+          child: Text(
+            genre,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          style: ElevatedButton.styleFrom(
+            primary: Colors.pink.withAlpha(80),
+            side: const BorderSide(
+              color: Colors.pink,
+              width: 1,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+          ),
+        );
+
+        searched.add(
+          Padding(
+            child: genreButton,
+            padding:
+                const EdgeInsets.only(right: 6, left: 6, top: 2, bottom: 2),
+          ),
+        );
       }
       setState(() {
         loading = false;
