@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       title: 'Everynoise',
       theme: ThemeData(
         brightness: Brightness.dark,
-        primarySwatch: Colors.green,
+        primarySwatch: Colors.pink,
       ),
       home: const MyHomePage(title: 'EveryNoise'),
     );
