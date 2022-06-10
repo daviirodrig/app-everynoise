@@ -20,6 +20,8 @@ class _GenrePageState extends State<GenrePage> {
   Map<String, dynamic> genreArtists = {};
   final AudioPlayer player = AudioPlayer();
   Timer? timer;
+  bool _expanded = false;
+  int _selectedIndex = 0;
 
   void _scanGenres() {
     Random random = Random();
@@ -34,12 +36,19 @@ class _GenrePageState extends State<GenrePage> {
           index = random.nextInt(listSize);
           artist = genreArtists["artists"][index];
         }
+        setState(() {
+          _selectedIndex = index;
+          _expanded = true;
+        });
         _playSong(artist);
       },
     );
   }
 
   void _playSong(artist) async {
+    if (player.playing) {
+      player.stop();
+    }
     String url = artist["preview_url"];
     if (url.isNotEmpty) {
       await player.setUrl(url);
@@ -129,11 +138,35 @@ class _GenrePageState extends State<GenrePage> {
                     ),
                   ),
                   trailing: const Icon(Icons.audiotrack_rounded),
-                  onTap: () => _playSong(artist),
+                  onTap: () => {
+                    setState(() {
+                      if (player.playing) {
+                        player.stop();
+                        _expanded = false;
+                      } else {
+                        _playSong(artist);
+                        _expanded = true;
+                      }
+                      _selectedIndex = index;
+                    })
+                  },
                 );
               },
               separatorBuilder: (context, index) {
-                return const Divider();
+                if (_expanded && index == _selectedIndex) {
+                  return Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 8.0,
+                    ),
+                    child: Text(
+                      '${genreArtists["artists"][index]["song_title"]}',
+                      textAlign: TextAlign.center,
+                    ),
+                  );
+                } else {
+                  return const Divider();
+                }
               },
             )
           : const Center(
@@ -144,7 +177,9 @@ class _GenrePageState extends State<GenrePage> {
               onPressed: () {
                 player.stop();
                 timer?.cancel();
-                setState(() {});
+                setState(() {
+                  _expanded = false;
+                });
               },
               child: const Icon(Icons.stop),
             )
