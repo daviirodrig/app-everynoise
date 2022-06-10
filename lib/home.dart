@@ -1,8 +1,6 @@
 import 'genrepage.dart';
-import 'dart:convert';
+import 'utils/network.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -14,29 +12,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<Widget> searched = [];
+  List<Widget> genreButtons = [];
   bool loading = false;
 
-  Future<List<dynamic>> _searchArtist(String q) async {
-    await dotenv.load();
-    String url = dotenv.get("HOST");
-    try {
-      http.Response res = await http.get(
-        Uri.parse('$url/search/artist/$q'),
-      );
-      Map<String, dynamic> resJson = jsonDecode(utf8.decode(res.bodyBytes));
-      return resJson['genres'];
-    } catch (e) {
-      return [e.toString()];
-    }
-  }
-
-  void _submitGenre(String val) {
+  void _goToGenrePage(String genre) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => GenrePage(
-          genre: val,
+          genre: genre,
         ),
       ),
     );
@@ -46,40 +30,38 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       loading = true;
     });
-    _searchArtist(val).then((v) {
-      searched = [];
+    searchArtist(val).then((v) {
+      genreButtons = [];
+
       for (var genre in v) {
-        ElevatedButton genreButton = ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => GenrePage(
-                  genre: genre,
-                ),
-              ),
-            );
-          },
-          child: Text(
-            genre,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          style: ElevatedButton.styleFrom(
-            primary: Colors.pink.withAlpha(80),
-            side: const BorderSide(
-              color: Colors.pink,
-              width: 1,
-            ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
+        Text buttonText = Text(
+          genre,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
           ),
         );
 
-        searched.add(
+        ButtonStyle btnStyle = ElevatedButton.styleFrom(
+          primary: Colors.pink.withAlpha(80),
+          side: const BorderSide(
+            color: Colors.pink,
+            width: 1,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+        );
+
+        ElevatedButton genreButton = ElevatedButton(
+          child: buttonText,
+          style: btnStyle,
+          onPressed: () {
+            _goToGenrePage(genre);
+          },
+        );
+
+        genreButtons.add(
           Padding(
             child: genreButton,
             padding:
@@ -125,32 +107,29 @@ class _MyHomePageState extends State<MyHomePage> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: loading
-                ? const CircularProgressIndicator(
-                    backgroundColor: Colors.deepPurple,
-                    color: Colors.teal,
-                    strokeWidth: 5,
-                  )
+                ? const CircularProgressIndicator()
                 : Wrap(
-                    children: searched,
+                    children: genreButtons,
                   ),
           ),
           Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                onSubmitted: _submitGenre,
-                controller: _genrecontrol,
-                decoration: InputDecoration(
-                  labelText: "Go to genre",
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.arrow_right_alt),
-                    iconSize: 38.0,
-                    onPressed: () {
-                      _submitGenre(_genrecontrol.text);
-                    },
-                  ),
-                  border: const OutlineInputBorder(),
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              onSubmitted: _goToGenrePage,
+              controller: _genrecontrol,
+              decoration: InputDecoration(
+                labelText: "Go to genre",
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.arrow_right_alt),
+                  iconSize: 38.0,
+                  onPressed: () {
+                    _goToGenrePage(_genrecontrol.text);
+                  },
                 ),
-              ))
+                border: const OutlineInputBorder(),
+              ),
+            ),
+          )
         ],
       ),
     );

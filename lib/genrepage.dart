@@ -1,11 +1,10 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:math';
 import 'package:app_everynoise/playlists_page.dart';
+import 'package:app_everynoise/utils/network.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:just_audio/just_audio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'utils/others.dart';
 
 class GenrePage extends StatefulWidget {
   GenrePage({Key? key, required this.genre}) : super(key: key);
@@ -22,42 +21,41 @@ class _GenrePageState extends State<GenrePage> {
   final AudioPlayer player = AudioPlayer();
   Timer? timer;
 
-  Future<Map<String, dynamic>> _networkGenrePage(String q) async {
-    await dotenv.load();
-    String url = dotenv.get("HOST");
-
-    try {
-      http.Response res = await http.get(
-        Uri.parse('$url/genre/$q'),
-      );
-      Map<String, dynamic> resJson = jsonDecode(utf8.decode(res.bodyBytes));
-
-      return resJson;
-    } catch (e) {
-      return {"e": e.toString()};
-    }
-  }
-
   void _scanGenres() {
     Random random = Random();
     int listSize = genreArtists["artists"].length;
-    timer = Timer.periodic(const Duration(seconds: 30), (timer) {
-      _playSong(random.nextInt(listSize));
-    });
+    timer = Timer.periodic(
+      const Duration(seconds: 30),
+      (timer) {
+        int index = random.nextInt(listSize);
+        dynamic artist = genreArtists["artists"][index];
+        // if artist has no preview url, get another one
+        while (artist["preview_url"].isEmpty) {
+          index = random.nextInt(listSize);
+          artist = genreArtists["artists"][index];
+        }
+        _playSong(artist);
+      },
+    );
   }
 
-  void _playSong(index) async {
-    String url = genreArtists["artists"][index]["preview_url"];
+  void _playSong(artist) async {
+    String url = artist["preview_url"];
     if (url.isNotEmpty) {
       await player.setUrl(url);
       await player.setLoopMode(LoopMode.one);
       player.play();
       setState(() {});
+    } else {
+      showToast(
+        context,
+        "No preview available for artist: ${artist["name"]}",
+      );
     }
   }
 
   void _loadArtistsList() {
-    var res = _networkGenrePage(widget.genre);
+    var res = searchGenrePage(widget.genre);
     res.then((value) {
       genreArtists = value;
       if (mounted) {
@@ -80,6 +78,7 @@ class _GenrePageState extends State<GenrePage> {
   @override
   void dispose() {
     player.dispose();
+    timer?.cancel();
     super.dispose();
   }
 
@@ -102,32 +101,35 @@ class _GenrePageState extends State<GenrePage> {
             ),
           ),
           IconButton(
-              onPressed: _goToPlaylists,
-              icon: const Icon(Icons.my_library_music_rounded))
+            onPressed: _goToPlaylists,
+            icon: const Icon(
+              Icons.my_library_music_rounded,
+            ),
+          )
         ],
       ),
       body: genreArtists.isNotEmpty
           ? ListView.separated(
               itemCount: genreArtists["artists"].length,
               itemBuilder: (context, index) {
+                dynamic artist = genreArtists["artists"][index];
+
+                String hColor = artist["style"][0].split(" ")[1].substring(1);
+                String prefix = artist["preview_url"].isEmpty ? "0x55" : "0xFF";
+
+                Color color = Color(
+                  int.parse(prefix + hColor),
+                );
+
                 return ListTile(
                   title: Text(
-                    genreArtists["artists"][index]["name"],
+                    artist["name"],
                     style: TextStyle(
-                      color: Color(int.parse(
-                          genreArtists["artists"][index]["preview_url"].isEmpty
-                              ? "0x55" +
-                                  genreArtists["artists"][index]["style"][0]
-                                      .split(" ")[1]
-                                      .substring(1)
-                              : "0xFF" +
-                                  genreArtists["artists"][index]["style"][0]
-                                      .split(" ")[1]
-                                      .substring(1))),
+                      color: color,
                     ),
                   ),
                   trailing: const Icon(Icons.audiotrack_rounded),
-                  onTap: () => _playSong(index),
+                  onTap: () => _playSong(artist),
                 );
               },
               separatorBuilder: (context, index) {
