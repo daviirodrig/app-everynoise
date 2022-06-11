@@ -1,10 +1,8 @@
 import 'package:http/http.dart' as http;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:convert';
 
 Future<List<dynamic>> searchArtist(String q) async {
-  await dotenv.load();
-  String url = dotenv.get("HOST");
+  String url = "https://e.davi.gq/";
   try {
     http.Response res = await http.get(
       Uri.parse('$url/search/artist/$q'),
@@ -17,8 +15,7 @@ Future<List<dynamic>> searchArtist(String q) async {
 }
 
 Future<Map<String, dynamic>> searchGenrePage(String q) async {
-  await dotenv.load();
-  String url = dotenv.get("HOST");
+  String url = "https://e.davi.gq/";
 
   try {
     http.Response res = await http.get(
