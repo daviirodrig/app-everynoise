@@ -19478,7 +19478,7 @@ return}throw"Unable to print message: "+String(a)},
 adL(a){return A.aB4(a)},
 aB4(a){var s=0,r=A.F(t.j),q,p=2,o,n=[],m,l,k,j,i,h,g
 var $async$adL=A.G(function(b,c){if(b===1){o=c
-s=p}while(true)switch(s){case 0:h="https://e.davi.gq/"
+s=p}while(true)switch(s){case 0:h="https://e.davi.gq"
 p=4
 s=7
 return A.y(A.amW(A.iN(A.e(h)+"/search/artist/"+a,0,null)),$async$adL)
@@ -19508,7 +19508,7 @@ return A.E($async$adL,r)},
 adM(a){return A.aB5(a)},
 aB5(a){var s=0,r=A.F(t.a),q,p=2,o,n=[],m,l,k,j,i,h,g
 var $async$adM=A.G(function(b,c){if(b===1){o=c
-s=p}while(true)switch(s){case 0:h="https://e.davi.gq/"
+s=p}while(true)switch(s){case 0:h="https://e.davi.gq"
 p=4
 s=7
 return A.y(A.amW(A.iN(A.e(h)+"/genre/"+a,0,null)),$async$adM)
