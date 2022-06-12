@@ -1,8 +1,9 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+String url = "https://e.davi.gq";
+
 Future<List<dynamic>> searchArtist(String q) async {
-  String url = "https://e.davi.gq/";
   try {
     http.Response res = await http.get(
       Uri.parse('$url/search/artist/$q'),
@@ -15,8 +16,6 @@ Future<List<dynamic>> searchArtist(String q) async {
 }
 
 Future<Map<String, dynamic>> searchGenrePage(String q) async {
-  String url = "https://e.davi.gq/";
-
   try {
     http.Response res = await http.get(
       Uri.parse('$url/genre/$q'),
