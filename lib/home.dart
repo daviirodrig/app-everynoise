@@ -43,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
         );
 
         ButtonStyle btnStyle = ElevatedButton.styleFrom(
-          primary: Colors.pink.withAlpha(80),
+          backgroundColor: Colors.pink.withAlpha(80),
           side: const BorderSide(
             color: Colors.pink,
             width: 1,
@@ -54,18 +54,18 @@ class _MyHomePageState extends State<MyHomePage> {
         );
 
         ElevatedButton genreButton = ElevatedButton(
-          child: buttonText,
           style: btnStyle,
           onPressed: () {
             _goToGenrePage(genre);
           },
+          child: buttonText,
         );
 
         genreButtons.add(
           Padding(
-            child: genreButton,
             padding:
                 const EdgeInsets.only(right: 6, left: 6, top: 2, bottom: 2),
+            child: genreButton,
           ),
         );
       }
