@@ -140,13 +140,8 @@ class _GenrePageState extends State<GenrePage> {
                   trailing: const Icon(Icons.audiotrack_rounded),
                   onTap: () => {
                     setState(() {
-                      if (player.playing) {
-                        player.stop();
-                        _expanded = false;
-                      } else {
                         _playSong(artist);
                         _expanded = true;
-                      }
                       _selectedIndex = index;
                     })
                   },
