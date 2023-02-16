@@ -1,6 +1,7 @@
 import 'genrepage.dart';
 import 'utils/network.dart';
 import 'package:flutter/material.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -78,6 +79,11 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _genrecontrol = TextEditingController();
   final TextEditingController _artistcontrol = TextEditingController();
 
+  final controller = WebViewController()
+    ..setJavaScriptMode(JavaScriptMode.unrestricted)
+    ..setBackgroundColor(Colors.transparent)
+    ..loadRequest(Uri.parse('https://everynoise.com'));
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -113,7 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.fromLTRB(8, 8, 8, 16),
             child: TextField(
               onSubmitted: _goToGenrePage,
               controller: _genrecontrol,
@@ -129,7 +135,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 border: const OutlineInputBorder(),
               ),
             ),
-          )
+          ),
+          Expanded(
+            child: WebViewWidget(
+              controller: controller,
+            ),
+          ),
         ],
       ),
     );
