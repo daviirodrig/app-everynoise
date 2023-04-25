@@ -15,7 +15,6 @@ class AllGenresPage extends StatefulWidget {
 
 class _AllGenresPageState extends State<AllGenresPage> {
   final AudioPlayer player = AudioPlayer();
-  Timer? timer;
   bool _expanded = false;
   int _selectedIndex = 0;
   bool isLoading = true;
@@ -23,23 +22,20 @@ class _AllGenresPageState extends State<AllGenresPage> {
   void _scanGenres() {
     Random random = Random();
     int listSize = _genresData.length;
-    timer = Timer.periodic(
-      const Duration(seconds: 30),
-      (timer) {
-        int index = random.nextInt(listSize);
-        dynamic artist = _genresData[index];
-        // if artist has no preview url, get another one
-        while (artist["preview_url"].isEmpty) {
-          index = random.nextInt(listSize);
-          artist = _genresData[index];
-        }
-        setState(() {
-          _selectedIndex = index;
-          _expanded = true;
-        });
-        _playSong(artist);
-      },
-    );
+
+    int index = random.nextInt(listSize);
+    dynamic genre = _genresData[index];
+    // if artist has no preview url, get another one
+    while (genre["preview_url"].isEmpty) {
+      index = random.nextInt(listSize);
+      genre = _genresData[index];
+    }
+    setState(() {
+      _selectedIndex = index;
+      _expanded = true;
+    });
+    showToast(context, 'Now playing: ${genre["name"]}');
+    _playSong(genre);
   }
 
   void _playSong(genre) async {
@@ -92,6 +88,12 @@ class _AllGenresPageState extends State<AllGenresPage> {
   }
 
   @override
+  void dispose() {
+    player.dispose();
+    super.dispose();
+  }
+
+  @override
   void initState() {
     _loadGenresList();
     super.initState();
@@ -105,7 +107,7 @@ class _AllGenresPageState extends State<AllGenresPage> {
           IconButton(
             onPressed: _scanGenres,
             icon: const Icon(
-              Icons.sensors,
+              Icons.shuffle,
             ),
           ),
         ],
@@ -183,7 +185,6 @@ class _AllGenresPageState extends State<AllGenresPage> {
           ? FloatingActionButton(
               onPressed: () {
                 player.stop();
-                timer?.cancel();
                 setState(() {
                   _expanded = false;
                 });
