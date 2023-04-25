@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher_string.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PlaylistsPage extends StatefulWidget {
   const PlaylistsPage({Key? key, required this.list}) : super(key: key);
@@ -20,16 +20,15 @@ class _PlaylistsPageState extends State<PlaylistsPage> {
         itemCount: widget.list.length,
         itemBuilder: (context, index) {
           String name = widget.list[index].entries.first.key.toString();
-          String url = widget.list[index].entries.first.value.toString();
-          String spotifyUri = "spotify:playlist:" + url.split('/').last;
+          Uri url =
+              Uri.parse(widget.list[index].entries.first.value.toString());
+          //String spotifyUri = "spotify:playlist:${url.split('/').last}";
           return ListTile(
               title: Text(name),
-              subtitle: Text(url),
+              subtitle: Text(url.toString()),
               // ontap open link in browser
               onTap: () async {
-                if (await canLaunchUrlString(spotifyUri)) {
-                  launchUrlString(spotifyUri);
-                }
+                launchUrl(url, mode: LaunchMode.externalApplication);
               });
         },
       ),
