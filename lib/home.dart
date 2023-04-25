@@ -1,7 +1,8 @@
+import 'package:app_everynoise/all_genres_page.dart';
+
 import 'genrepage.dart';
 import 'utils/network.dart';
 import 'package:flutter/material.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -79,16 +80,24 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _genrecontrol = TextEditingController();
   final TextEditingController _artistcontrol = TextEditingController();
 
-  final controller = WebViewController()
-    ..setJavaScriptMode(JavaScriptMode.unrestricted)
-    ..setBackgroundColor(Colors.transparent)
-    ..loadRequest(Uri.parse('https://everynoise.com'));
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AllGenresPage(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.apps),
+          )
+        ],
       ),
       body: Column(
         children: [
@@ -134,11 +143,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 border: const OutlineInputBorder(),
               ),
-            ),
-          ),
-          Expanded(
-            child: WebViewWidget(
-              controller: controller,
             ),
           ),
         ],
