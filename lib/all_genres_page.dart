@@ -18,6 +18,7 @@ class _AllGenresPageState extends State<AllGenresPage> {
   Timer? timer;
   bool _expanded = false;
   int _selectedIndex = 0;
+  bool isLoading = true;
 
   void _scanGenres() {
     Random random = Random();
@@ -83,7 +84,9 @@ class _AllGenresPageState extends State<AllGenresPage> {
       _genresData = value["genres"];
       _filteredData = _genresData;
       if (mounted) {
-        setState(() {});
+        setState(() {
+          isLoading = false;
+        });
       }
     });
   }
@@ -107,7 +110,7 @@ class _AllGenresPageState extends State<AllGenresPage> {
           ),
         ],
       ),
-      body: _filteredData.isNotEmpty
+      body: !isLoading
           ? Column(
               children: [
                 Padding(
