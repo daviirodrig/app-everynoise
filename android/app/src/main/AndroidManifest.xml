@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.app_everynoise">
+    package="com.everynoise">
    <application
-        android:label="app_everynoise"
+        android:label="Everynoise"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

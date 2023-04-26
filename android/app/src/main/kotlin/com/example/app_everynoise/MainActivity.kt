@@ -1,4 +1,4 @@
-package com.example.app_everynoise
+package com.everynoise
 
 import io.flutter.embedding.android.FlutterActivity
 
