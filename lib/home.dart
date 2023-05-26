@@ -16,6 +16,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<Widget> genreButtons = [];
   bool loading = false;
+  List<String> genres = [];
 
   void _goToGenrePage(String genre) {
     Navigator.push(
@@ -26,6 +27,12 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
+  }
+
+  Future<List<String>> _getListOfGenres() async {
+    dynamic res = await getAllgenres();
+    List l = res["genres"];
+    return l.map<String>((e) => e["name"]!).toList();
   }
 
   void _submitArtist(String val) {
@@ -81,6 +88,12 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _artistcontrol = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    _getListOfGenres().then((value) => genres = value);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -129,20 +142,82 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(8, 8, 8, 16),
-            child: TextField(
-              onSubmitted: _goToGenrePage,
-              controller: _genrecontrol,
-              decoration: InputDecoration(
-                labelText: "Go to genre",
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.arrow_right_alt),
-                  iconSize: 38.0,
-                  onPressed: () {
-                    _goToGenrePage(_genrecontrol.text);
-                  },
-                ),
-                border: const OutlineInputBorder(),
-              ),
+            child: Autocomplete(
+              optionsBuilder: (TextEditingValue textEditingValue) {
+                Iterable<String> results = genres.where(
+                  (item) => item
+                      .toLowerCase()
+                      .contains(textEditingValue.text.toLowerCase()),
+                );
+
+                return results;
+              },
+              onSelected: (option) {
+                _goToGenrePage(option);
+              },
+              fieldViewBuilder: (context, textEditingController, focusNode,
+                  onFieldSubmitted) {
+                _genrecontrol.text = textEditingController.text;
+                // textEditingController.text = _genrecontrol.text;
+                // _genreFocus.addListener(() {
+                //   if (!_genreFocus.hasFocus) {
+                //     _goToGenrePage(_genrecontrol.text);
+                //   }
+                // });
+                return TextField(
+                  controller: textEditingController,
+                  onSubmitted: _goToGenrePage,
+                  focusNode: focusNode,
+                  decoration: InputDecoration(
+                    labelText: "Go to genre",
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.arrow_right_alt),
+                      iconSize: 38.0,
+                      onPressed: () {
+                        _goToGenrePage(_genrecontrol.text);
+                      },
+                    ),
+                    border: const OutlineInputBorder(),
+                  ),
+                );
+              },
+              optionsViewBuilder: (BuildContext context,
+                  AutocompleteOnSelected<String> onSelected,
+                  Iterable<String> options) {
+                return Align(
+                  alignment: Alignment.topLeft,
+                  child: Material(
+                    elevation: 16.0,
+                    child: SizedBox(
+                      width: 370,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                          color: const Color(0xFF000000),
+                        )),
+                        child: ListView.separated(
+                          separatorBuilder: (context, index) => const Divider(
+                            color: Colors.pinkAccent,
+                          ),
+                          shrinkWrap: true,
+                          itemCount: options.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final String option = options.elementAt(index);
+                            return GestureDetector(
+                              onTap: () {
+                                onSelected(option);
+                              },
+                              child: ListTile(
+                                title: Text(option),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         ],
