@@ -1,5 +1,6 @@
 import 'package:app_everynoise/all_genres_page.dart';
 
+import 'all_genres_widget.dart';
 import 'genrepage.dart';
 import 'utils/network.dart';
 import 'package:flutter/material.dart';
@@ -84,7 +85,6 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  final TextEditingController _genrecontrol = TextEditingController();
   final TextEditingController _artistcontrol = TextEditingController();
 
   @override
@@ -140,84 +140,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     children: genreButtons,
                   ),
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8, 8, 8, 16),
-            child: Autocomplete(
-              optionsBuilder: (TextEditingValue textEditingValue) {
-                Iterable<String> results = genres.where(
-                  (item) => item
-                      .toLowerCase()
-                      .contains(textEditingValue.text.toLowerCase()),
-                );
-
-                return results;
-              },
-              onSelected: (option) {
-                _goToGenrePage(option);
-              },
-              fieldViewBuilder: (context, textEditingController, focusNode,
-                  onFieldSubmitted) {
-                _genrecontrol.text = textEditingController.text;
-                // textEditingController.text = _genrecontrol.text;
-                // _genreFocus.addListener(() {
-                //   if (!_genreFocus.hasFocus) {
-                //     _goToGenrePage(_genrecontrol.text);
-                //   }
-                // });
-                return TextField(
-                  controller: textEditingController,
-                  onSubmitted: _goToGenrePage,
-                  focusNode: focusNode,
-                  decoration: InputDecoration(
-                    labelText: "Go to genre",
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.arrow_right_alt),
-                      iconSize: 38.0,
-                      onPressed: () {
-                        _goToGenrePage(_genrecontrol.text);
-                      },
-                    ),
-                    border: const OutlineInputBorder(),
-                  ),
-                );
-              },
-              optionsViewBuilder: (BuildContext context,
-                  AutocompleteOnSelected<String> onSelected,
-                  Iterable<String> options) {
-                return Align(
-                  alignment: Alignment.topLeft,
-                  child: Material(
-                    elevation: 16.0,
-                    child: SizedBox(
-                      width: 370,
-                      child: Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                          color: const Color(0xFF000000),
-                        )),
-                        child: ListView.separated(
-                          separatorBuilder: (context, index) => const Divider(
-                            color: Colors.pinkAccent,
-                          ),
-                          shrinkWrap: true,
-                          itemCount: options.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            final String option = options.elementAt(index);
-                            return GestureDetector(
-                              onTap: () {
-                                onSelected(option);
-                              },
-                              child: ListTile(
-                                title: Text(option),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              },
+          const Expanded(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(8, 8, 8, 16),
+              child: AllGenresWidget(),
             ),
           ),
         ],
