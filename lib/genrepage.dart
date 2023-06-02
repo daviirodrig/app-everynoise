@@ -47,7 +47,7 @@ class _GenrePageState extends State<GenrePage> {
 
   void _playSong(artist) async {
     if (player.playing) {
-      player.stop();
+      player.pause();
     }
     String url = artist["preview_url"];
     if (url.isNotEmpty) {
