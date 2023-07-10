@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:math';
-import 'playlists_page.dart';
-import 'utils/network.dart';
+
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+
+import 'playlists_page.dart';
+import 'utils/network.dart';
 import 'utils/others.dart';
 
 class GenrePage extends StatefulWidget {
@@ -18,7 +20,7 @@ class GenrePage extends StatefulWidget {
 
 class _GenrePageState extends State<GenrePage> {
   Map<String, dynamic> genreArtists = {};
-  final AudioPlayer player = AudioPlayer();
+  AudioPlayer player = AudioPlayer();
   Timer? timer;
   bool _expanded = false;
   int _selectedIndex = 0;
@@ -46,9 +48,9 @@ class _GenrePageState extends State<GenrePage> {
   }
 
   void _playSong(artist) async {
-    if (player.playing) {
-      player.pause();
-    }
+    await player.stop();
+    AudioPlayer newPlayer = AudioPlayer();
+    player = newPlayer;
     String url = artist["preview_url"];
     if (url.isNotEmpty) {
       await player.setUrl(url);

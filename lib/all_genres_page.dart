@@ -13,7 +13,7 @@ class AllGenresPage extends StatefulWidget {
 }
 
 class _AllGenresPageState extends State<AllGenresPage> {
-  final AudioPlayer player = AudioPlayer();
+  AudioPlayer player = AudioPlayer();
   bool _expanded = false;
   int _selectedIndex = 0;
   bool isLoading = true;
@@ -38,9 +38,9 @@ class _AllGenresPageState extends State<AllGenresPage> {
   }
 
   void _playSong(genre) async {
-    if (player.playing) {
-      player.stop();
-    }
+    await player.stop();
+    AudioPlayer newPlayer = AudioPlayer();
+    player = newPlayer;
     String url = genre["preview_url"];
     if (url.isNotEmpty) {
       await player.setUrl(url);
