@@ -9,11 +9,15 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-  static final _defaultLightColorScheme =
-      ColorScheme.fromSwatch(primarySwatch: Colors.pink);
+  static final _defaultLightColorScheme = ColorScheme.fromSeed(
+    seedColor: Colors.red,
+    brightness: Brightness.light,
+  );
 
-  static final _defaultDarkColorScheme = ColorScheme.fromSwatch(
-      primarySwatch: Colors.pink, brightness: Brightness.dark);
+  static final _defaultDarkColorScheme = ColorScheme.fromSeed(
+    seedColor: Colors.red,
+    brightness: Brightness.dark,
+  );
 
   @override
   Widget build(BuildContext context) {
