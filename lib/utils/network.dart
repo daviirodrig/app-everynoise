@@ -1,7 +1,7 @@
 import 'dart:convert';
 import "package:http/http.dart" as http;
 
-String url = "https://e.davi.gq";
+String url = "https://e.justdavi.dev";
 
 Future<List<dynamic>> searchArtist(String q) async {
   try {
