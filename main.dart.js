@@ -23437,7 +23437,7 @@ aHE(a){var s=0,r=A.F(t.j),q,p=2,o,n,m,l,k,j,i
 var $async$ajP=A.G(function(b,c){if(b===1){o=c
 s=p}while(true)switch(s){case 0:p=4
 s=7
-return A.B(A.amU(A.fd("https://e.davi.gq/search/artist/"+a,0,null)),$async$ajP)
+return A.B(A.amU(A.fd("https://e.justdavi.dev/search/artist/"+a,0,null)),$async$ajP)
 case 7:n=c
 m=B.b4.wK(0,B.K.dO(0,n.w),null)
 k=J.ag(m,"genres")
@@ -23466,7 +23466,7 @@ aHF(a){var s=0,r=A.F(t.a),q,p=2,o,n,m,l,k,j,i
 var $async$ajQ=A.G(function(b,c){if(b===1){o=c
 s=p}while(true)switch(s){case 0:p=4
 s=7
-return A.B(A.amU(A.fd("https://e.davi.gq/genre/"+a,0,null)),$async$ajQ)
+return A.B(A.amU(A.fd("https://e.justdavi.dev/genre/"+a,0,null)),$async$ajQ)
 case 7:n=c
 m=B.b4.wK(0,B.K.dO(0,n.w),null)
 q=m
@@ -23493,7 +23493,7 @@ DK(){var s=0,r=A.F(t.a),q,p=2,o,n,m,l,k,j,i
 var $async$DK=A.G(function(a,b){if(a===1){o=b
 s=p}while(true)switch(s){case 0:p=4
 s=7
-return A.B(A.amU(A.fd("https://e.davi.gq/genres",0,null)),$async$DK)
+return A.B(A.amU(A.fd("https://e.justdavi.dev/genres",0,null)),$async$DK)
 case 7:n=b
 m=B.b4.wK(0,B.K.dO(0,n.w),null)
 q=m
